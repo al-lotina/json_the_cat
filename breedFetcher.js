@@ -1,15 +1,15 @@
 const request = require('request');
-const input = process.argv.slice(2);
-// console.log(input[0]);
+// const breedName = process.argv[2]; // moved to index.js
 
-request(`https://api.thecatapi.com/v1/breeds/search?q=${input[0]}`, (error, response, body) => {
-  if (error) console.log ('Error: invalid domain name.'); 
-  console.log('statusCode:', response && response.statusCode); 
-  if (body) {
+const fetchBreedDescription = function(breedName, callback) {
+  request(`https://api.thecatapi.com/v1/breeds/search?q=${breedName}`, (error, response, body) => {
+    if (error) callback(error); 
+    // console.log('statusCode:', response && response.statusCode); // moved to index.js
     const data = JSON.parse(body); // to change data format from string to object
-    console.log('Type: ', typeof data);
-    console.log('Body:\n', data[0].description); // to acces the first element of the array which is an object and then access the description key in that object
-  } else {
-    console.log(`${input[0]} is not found.`)
-  }
-});
+    // console.log('Type: ', typeof data);
+    callback(error, data[0].description); // to acces the first element of the array which is an object and then access the description key in that object
+  });
+};
+
+module.exports = fetchBreedDescription;
+
